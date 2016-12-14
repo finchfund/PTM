@@ -12,7 +12,7 @@ a.T4=e.T4  \
 ")
 
 DATASET.show(10)
-
+DATASET.printSchema()
 
 # numeric feature, see the distributions (via sampling by 10%)
 # use RATIO_NORM's median value as classification threshold
