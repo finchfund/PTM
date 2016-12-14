@@ -1,11 +1,14 @@
 # python
 
-# create dataframe in spark with TX data
-df = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true').load('/tmp/data.csv')
 
 # spark context set up
 from pyspark import SparkContext
 spark = sqlContext.getOrCreate(SparkContext.getOrCreate())
+
+
+# create dataframe in spark with TX data
+df = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true').load('/tmp/data.csv')
+
 
 # profit/return table in Spark environment
 df_profit = sql("select * from profit")
