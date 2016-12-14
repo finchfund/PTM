@@ -46,3 +46,6 @@ TX_AGGTIME_RANK.registerTempTable("TXAGGTIMERANK")
 TX_TIME.show(10)
 TX_AGGTIME.show(10)
 TX_AGGTIME_RANK.show(10)
+
+
+## after testing order hour, order day of week, I removed them from data set because they were representing order qty scale.
