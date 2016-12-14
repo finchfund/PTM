@@ -1,0 +1,37 @@
+# RANK MAX
+# TIME
+TIMERANK_MAX = sql("select  1 as NUM2, \
+max(SLA_avg_rank) as SLA_RANKMAX, \
+max(O2FC_avg_rank) as O2FC_RANKMAX, \
+max(F2S_avg_rank) as F2S_RANKMAX, \
+max(O2S_avg_rank) as O2S_RANKMAX \
+from TXAGGTIMERANK group by NUM \
+")
+
+TIMERANK_MAX.registerTempTable("TIMERANK_MAX")
+
+# QTY
+QTYRANK_MAX = sql("select  1 as NUM2, \
+max(ORDCNT_RANK) as ORDCNT_RANKMAX \
+from TXQTYRANK  group by NUM \
+")
+
+QTYRANK_MAX.registerTempTable("QTYRANK_MAX")
+
+# price
+PRICERANK_MAX = sql("select  1 as NUM2, \
+max(price_mean_RANK) as pricemean_RANKMAX \
+from TXPRICERANK  group by NUM \
+")
+
+PRICERANK_MAX.registerTempTable("PRICERANK_MAX")
+
+# matrix
+MATRIXRANK_MAX = sql("select  1 as NUM2, \
+max(ratio_adj_rank) as ratioadj_RANKMAX \
+from MATRIXRANK  group by NUM \
+")
+
+MATRIXRANK_MAX.registerTempTable("MATRIXRANK_MAX")
+
+TIMERANK_MAX.show(10)
