@@ -1,0 +1,8 @@
+# python
+
+# dumping tx data to Databrick
+
+import urllib
+urllib.urlretrieve("https://s3.amazonaws.com/databricks-dump/datalakedr/mlTest/final/transactions/part-00000","/tmp/data.csv")
+
+# dumping profit/return data to Databrick : via 'direct uploading csv to create table' 
