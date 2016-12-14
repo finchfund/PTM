@@ -1,0 +1,39 @@
+# code : match max rank to each rank matrix -> percent_rank calculation (norm)
+NORM_TIME = sql("select a.T4, a.merchant_id, \
+a.SLA_avg,(a.SLA_avg_rank/b.SLA_RANKMAX) as SLA_NORM, \
+a.O2FC_avg,(a.O2FC_avg_rank/b.O2FC_RANKMAX) as O2FC_NORM, \
+a.F2S_avg,(a.F2S_avg_rank/b.F2S_RANKMAX) as F2S_NORM, \
+a.O2S_avg,(a.O2S_avg_rank/b.O2S_RANKMAX) as O2S_NORM \
+from TXAGGTIMERANK a, TIMERANK_MAX b \
+where a.num = b.num2 \
+")
+
+NORM_TIME.show(10)
+NORM_TIME.registerTempTable("NORMTIME")
+
+# qty
+NORM_QTY = sql("select a.T4, a.merchant_id, a.ordcnt, \
+a.ORDCNT_RANK/b.ORDCNT_RANKMAX as ORDCNT_NORM \
+from TXQTYRANK a, QTYRANK_MAX b \
+where a.num = b.num2 ")
+
+NORM_QTY.show(10)
+NORM_QTY.registerTempTable("NORMQTY")
+
+# price
+NORM_PRICE = sql("select a.T4, a.merchant_id, a.price_mean, \
+a.price_mean_RANK/b.pricemean_RANKMAX as PRICE_NORM \
+from TXPRICERANK a, PRICERANK_MAX b \
+where a.num = b.num2 ")
+
+NORM_PRICE.show(10)
+NORM_PRICE.registerTempTable("NORMPRICE")
+          
+# matrix     
+NORM_MATRIX = sql("select a.T4, a.merchant_id, a.ratio, a.ratio_adj, \
+a.ratio_adj_rank/b.ratioadj_RANKMAX as RATIO_NORM \
+from MATRIXRANK a, MATRIXRANK_MAX b \
+where a.num = b.num2 ")
+
+NORM_MATRIX.show(10)
+NORM_MATRIX.registerTempTable("NORMMATRIX")
