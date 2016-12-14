@@ -1,0 +1,28 @@
+# code: MATRIX
+MATRIX = sql("select a.*, b.cancel_num, b.return_num, c.ordcnt, \
+(b.cancel_num + b.return_num)/c.ordcnt as ratio \
+from  (select T4, merchant_id,commission_percent,cashback_percent, discount_percent from PROFIT) a, \
+(select T4, merchant_id, cancel_num, return_num from RETURN ) b, TXQTY c \
+where a.T4 =b.T4 and \
+a.merchant_id= b.merchant_id and \
+b.T4 =c.T4 and \
+b.merchant_id=c.merchant_id ")
+
+MATRIX.show(10)
+MATRIX.registerTempTable("MATRIX")
+
+MATRIX_ADJ = sql("select *, \
+case when ratio >=1 then 1 else floor(ratio/0.1)*0.1 end as ratio_adj \
+from MATRIX \
+")
+MATRIX_ADJ.registerTempTable("MATRIXADJ")
+
+# rank
+MATRIX_RANK =  sql("select *,  1 as NUM,\
+RANK() OVER (ORDER BY ratio_adj desc) as ratio_adj_rank \
+from MATRIXADJ ")
+MATRIX_RANK.registerTempTable("MATRIXRANK")
+
+MATRIX_RANK.show(10)
+
+
