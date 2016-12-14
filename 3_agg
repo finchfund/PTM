@@ -19,6 +19,12 @@ datediff(  date(fulfillment_shipped_at), date(item_created_at) ) as O2S \
 from TX ")
 TX_TIME.registerTempTable("TXTIME")
 
+# SLA : SLA days
+# O2FC : Order created to fullfillment created
+# F2S : fulfuillment created to shipped
+# O2S : Order created to shipped
+
+
 # aggregation
 TX_AGGTIME = sql("select T4, merchant_id, \
 avg(SLA) as SLA_avg, \
