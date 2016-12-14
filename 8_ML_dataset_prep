@@ -1,0 +1,14 @@
+# data set
+DATASET = sql("select a.T4, a.merchant_id, \
+a.SLA_NORM, a.O2FC_NORM, a.F2S_NORM, a.O2S_NORM, \
+a.SLA_avg, a.O2FC_avg, a.F2S_avg,a.O2S_avg, \
+b.ordcnt, \
+b.ORDCNT_NORM, c.price_mean, c.PRICE_NORM, d.ratio, d.ratio_adj, d.RATIO_NORM, e.T1 \
+from NORMTIME a, NORMQTY b, NORMPRICE c, NORMMATRIX d, TXCAT e where \
+a.T4=b.T4 and a.merchant_id=b.merchant_id and \
+a.T4=c.T4 and a.merchant_id=c.merchant_id and \
+a.T4=d.T4 and a.merchant_id=d.merchant_id and \
+a.T4=e.T4  \
+")
+
+DATASET.show(10)
