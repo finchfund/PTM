@@ -1,0 +1,85 @@
+dataspk_sample = DATASET
+dataspk_sample.show(10)
+
+from pyspark.mllib.tree import RandomForest
+from pyspark.mllib.util import MLUtils
+import numpy as np
+import pandas as pd
+from pyspark.ml import Pipeline
+from pyspark.ml.classification import RandomForestClassifier as RF
+from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler, SQLTransformer, Binarizer
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator, BinaryClassificationEvaluator
+from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
+import numpy as np
+import functools
+from pyspark.ml.feature import OneHotEncoder
+ 
+
+
+
+
+# Load and parse the data file into an RDD of LabeledPoint.
+#dataspk = DATASET.sample(False, 0.1)
+#dataspk.show(10)
+
+data = dataspk_sample.toPandas()
+
+
+df_sample = data[['T1',
+               'SLA_NORM',
+               'O2FC_NORM',
+               'F2S_NORM',
+               'O2S_NORM',
+               'ORDCNT_NORM',
+               'PRICE_NORM',
+               'ratio_adj']]  # change here to RATIO_NORM
+
+df_sample_spk = spark.createDataFrame(df_sample)
+# add TARGET column
+binarizer = Binarizer(threshold = 0.25, inputCol='ratio_adj', outputCol='RATIO_NORM_TARGET')
+df_sample_spk = binarizer.transform(df_sample_spk)
+df_sample_spk.show(5)
+
+column_vec_in = ['T1']
+column_vec_out = ['T1_catVec']
+ 
+indexers = [StringIndexer(inputCol=x, outputCol=x+'_tmp')
+            for x in column_vec_in ]
+ 
+encoders = [OneHotEncoder(dropLast=False, inputCol=x+"_tmp", outputCol=y)
+for x,y in zip(column_vec_in, column_vec_out)]
+tmp = [[i,j] for i,j in zip(indexers, encoders)]
+tmp = [i for sublist in tmp for i in sublist]
+
+
+## T1 variable => one hot coded (categorical variable)
+
+
+cols_now =['SLA_NORM',
+           'O2FC_NORM',
+           'F2S_NORM',
+           'O2S_NORM',
+           'ORDCNT_NORM',
+           'PRICE_NORM']
+assembler_features = VectorAssembler(inputCols=cols_now, outputCol='features')
+labelIndexer = StringIndexer(inputCol='RATIO_NORM_TARGET', outputCol="label")
+tmp += [assembler_features, labelIndexer]
+pipeline = Pipeline(stages=tmp)
+
+allData = pipeline.fit(df_sample_spk).transform(df_sample_spk)
+allData.cache()
+trainingData, testData = allData.randomSplit([0.7,0.3], seed=0) # need to ensure same split for each time
+print("Distribution of Pos and Neg in trainingData is: ", trainingData.groupBy("label").count().take(3))
+
+
+# see whether targer variable is balanced 
+
+
+allData.show(10)
+# see dataset 
+
+#training and scoring with test data
+rf = RF(labelCol='label', featuresCol='features',numTrees=200 )
+fit = rf.fit(trainingData)
+transformed = fit.transform(testData)
+
