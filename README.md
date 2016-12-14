@@ -71,3 +71,14 @@ This is very risky customer response to e-commerce business.
 > - 5. Split dataset into **Training** and **Testing** sets
 > - 6. Measure AUC for evaluation of model performance **(Binary prediction)**
 
+
+**result **
+> - AUC : ~ 0.65 (not fantastic)
+> - scoring result : 0 to 1, decimal value
+
+
+**Application : **
+> - 1. run scoring for all sellers
+> - 2. Sort them by scoring result
+> - 3. low score group : investigate their underlying reasons of recurring order fulfillment issues
+> - 4. high score group : providing more incentive to maintain their service level
