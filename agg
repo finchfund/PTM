@@ -1,0 +1,42 @@
+# code: time , aggregation, rank
+from pyspark.sql.functions  import to_date
+
+dtable =df
+dtable = dtable.withColumn('fulfillment_shipped_at',to_date('fulfillment_shipped_at'))
+
+# remove null value
+dtable.registerTempTable("TX")
+dtable = sql("select * from TX where fulfillment_shipped_at is not null")
+dtable.registerTempTable("TX")
+TX_view= sql("select * from TX where fulfillment_shipped_at is null")
+
+# time
+TX_TIME = sql("select T4, merchant_id, \
+datediff(  date(item_ship_by_date), date(item_created_at) ) as SLA,  \
+datediff(  date(fulfillment_created_at), date(item_created_at) ) as O2FC,\
+datediff(  date(fulfillment_shipped_at), date(fulfillment_created_at) ) as F2S,\
+datediff(  date(fulfillment_shipped_at), date(item_created_at) ) as O2S \
+from TX ")
+TX_TIME.registerTempTable("TXTIME")
+
+# aggregation
+TX_AGGTIME = sql("select T4, merchant_id, \
+avg(SLA) as SLA_avg, \
+avg(O2FC) as O2FC_avg, \
+avg(F2S) as F2S_avg, \
+avg(O2S) as O2S_avg \
+from TXTIME group by T4, merchant_id ")
+TX_AGGTIME.registerTempTable("TXAGGTIME")
+
+# rank
+TX_AGGTIME_RANK = sql("select T4, merchant_id,  1 as NUM, \
+SLA_avg, RANK() OVER (ORDER BY SLA_avg desc) as SLA_avg_rank, \
+O2FC_avg, RANK() OVER (ORDER BY O2FC_avg desc) as O2FC_avg_rank, \
+F2S_avg, RANK() OVER (ORDER BY F2S_avg desc) as F2S_avg_rank, \
+O2S_avg, RANK() OVER (ORDER BY O2S_avg desc) as O2S_avg_rank \
+from TXAGGTIME ")
+TX_AGGTIME_RANK.registerTempTable("TXAGGTIMERANK")
+
+TX_TIME.show(10)
+TX_AGGTIME.show(10)
+TX_AGGTIME_RANK.show(10)
