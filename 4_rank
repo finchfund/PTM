@@ -1,0 +1,52 @@
+# code: QTY, rank
+
+# QTY
+TX_QTY = sql("select a.T4, a.merchant_id, \
+count(a.order_id) as ORDCNT from (select distinct T4, merchant_id, order_id from TX) a \
+group by a.T4, a.merchant_id ")
+TX_QTY.registerTempTable("TXQTY")
+
+# rank
+TX_QTY_RANK =  sql("select T4, merchant_id, ORDCNT, 1 as NUM,\
+RANK() OVER (ORDER BY ORDCNT desc) as ORDCNT_rank \
+from TXQTY ")
+TX_QTY_RANK.registerTempTable("TXQTYRANK")
+
+TX_QTY_RANK.show(10)
+
+
+
+
+
+
+
+
+# code: PRICE, rank
+
+# price
+TX_PRICE = sql("select T4, merchant_id, \
+avg(item_price) as price_mean from TX group by T4, merchant_id")
+
+TX_PRICE.registerTempTable("TXPRICE")
+
+# rank
+TX_PRICE_RANK =  sql("select T4, merchant_id, price_mean, 1 as NUM, \
+RANK() OVER (ORDER BY price_mean desc) as price_mean_rank \
+from TXPRICE ")
+TX_PRICE_RANK.registerTempTable("TXPRICERANK")
+
+
+
+
+
+
+
+# code: Category structure : T1, T2, T4
+TX_CAT = sql("select distinct T1,T2,T4 from TX")
+TX_CAT.registerTempTable("TXCAT")
+TX_CAT.show(10)
+
+
+
+
+
