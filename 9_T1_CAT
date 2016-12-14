@@ -1,0 +1,4 @@
+T1CAT = sql("select count(distinct T1) from TXCAT")
+T1CAT.show(10)
+
+# T1 category will be used as a seperate feature
