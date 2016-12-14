@@ -12,3 +12,12 @@ a.T4=e.T4  \
 ")
 
 DATASET.show(10)
+
+
+# numeric feature, see the distributions (via sampling by 10%)
+# use RATIO_NORM's median value as classification threshold
+
+
+numeric_features = [t[0] for t in DATASET.dtypes if t[1] == 'int' or t[1] == 'double']
+sampled_data = DATASET.select(numeric_features).sample(False, 0.1).toPandas()
+sampled_data.describe().transpose()
