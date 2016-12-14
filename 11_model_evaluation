@@ -1,0 +1,35 @@
+from pyspark.mllib.evaluation import BinaryClassificationMetrics as metric
+results = transformed.select(['probability', 'label'])
+ 
+## prepare score-label set
+results_collect = results.collect()
+results_list = [(float(i[0][0]), 1.0-float(i[1])) for i in results_collect]
+scoreAndLabels = sc.parallelize(results_list)
+ 
+metrics = metric(scoreAndLabels)
+print("The ROC score is (@numTrees=200): ", metrics.areaUnderROC)
+
+#### measure AUC for testing data
+
+
+
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+predictions = fit.transform(testData)
+
+# Select example rows to display.
+predictions.select("prediction", "label", "features").show(5)
+
+# Select (prediction, true label) and compute test error
+evaluator = MulticlassClassificationEvaluator(
+    labelCol="label", predictionCol="prediction", metricName="precision")
+
+accuracy = evaluator.evaluate(predictions)
+print("Test Error = %g" % (1.0 - accuracy))
+
+##### measure accuracy
+
+
+
+results.show(10)
+
+####### show score
