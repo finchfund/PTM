@@ -29,14 +29,14 @@ PTM submission code spark+python
 
 > - c. online discussion regarding PAYTM business and customer service: https://www.quora.com/What-is-your-review-of-Paytm-company
 
-Many of people in the discussion loop said they found differnt product in shippoing box compared to original image in web site.
+Many of people in the discussion loop said they found different product in shipping box compared to original image in web site.
 This is very risky customer response to e-commerce business.
 
-> - d. Seller scoring might be mainly focus on their order fullfillment instead of revenue generation.  Since large volume or large revenue is caused by product category or underlying demand, order fullfillment is one of main key indicator to judge their overall performance. And this one should be very well managed otherwise # of complaint customers will grow and discourage customers to buy products from PAYTM.
+> - d. Seller scoring might be mainly focus on their order fulfillment instead of revenue generation.  Since large volume or large revenue is caused by product category or underlying demand, order fulfillment is one of main key indicator to judge their overall performance. And this one should be very well managed otherwise # of complaint customers will grow and discourage customers to buy products from PAYTM.
 
-> - e. order fullfillment: despite some delay, customers receive what they expect without seller's cancellation or return.
+> - e. order fulfillment: despite some delay, customers receive what they expect without seller's cancellation or return.
 
-> - f. Seller scoring can stratch to area of higher commission or lower cashback. However data said the commission rate or cashback rate is tied to category level rather than seller level. 
+> - f. Seller scoring can stretch to area of higher commission or lower cashback. However data said the commission rate or cashback rate is tied to category level rather than seller level. 
 > - **( Weight of feature : category >> other features ) which means once category is determined, their commission and cashback conditions would be tied to categories.**
 
 
@@ -73,7 +73,7 @@ This is very risky customer response to e-commerce business.
 
 
 **result **
-> - AUC : ~ 0.65 (not fantastic)
+> - AUC : ~ 0.65 (not fantastic, but useful to judge seller's performance)
 > - scoring result : 0 to 1, decimal value
 
 
